@@ -1,4 +1,4 @@
-# Breakout Game in Python
+~# Breakout Game in Python
 
 ## Project Overview
 This project is a Python-based recreation of the classic arcade game **Breakout**. The game will feature:
@@ -79,3 +79,5 @@ This project is licensed under the MIT License. See the LICENSE file for details
 ## Acknowledgments
 - Inspired by the original **Breakout** arcade game.
 - Special thanks to the Python and `pygame` communities for their excellent resources.
+
+## Test push
