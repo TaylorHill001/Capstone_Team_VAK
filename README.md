@@ -79,5 +79,3 @@ This project is licensed under the MIT License. See the LICENSE file for details
 ## Acknowledgments
 - Inspired by the original **Breakout** arcade game.
 - Special thanks to the Python and `pygame` communities for their excellent resources.
-
-## Test push
