@@ -113,7 +113,7 @@ def show_retry_popup():
             if event.type == QUIT:
                 pygame.quit()
                 exit()
-            if event.type == MOUSEBUTTONDOWN and event.button == 1:
+            if event.type == MOUSEBUTTONDOWN and event.button == 1: #comment
                 if yes_button.collidepoint(event.pos):
                     return True
                 if no_button.collidepoint(event.pos):
