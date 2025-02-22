@@ -1,3 +1,4 @@
+import time
 import pygame
 import random
 from pygame.locals import *
@@ -23,6 +24,15 @@ BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
+
+#Scores
+scores = [
+    ("Alice", 5000, 10),
+    ("Bob", 4200, 9),
+    ("Charlie", 3900, 8),
+    ("David", 3500, 7),
+    ("Eve", 3000, 6),
+]
 
 # Screen setup
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -93,6 +103,7 @@ def show_retry_popup():
     yes_button = pygame.Rect(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 20, 100, 50)
     no_button = pygame.Rect(SCREEN_WIDTH // 2 + 20, SCREEN_HEIGHT // 2 + 20, 90, 50)
 
+
     running = True
     while running:
         screen.fill(WHITE)
@@ -107,6 +118,7 @@ def show_retry_popup():
         screen.blit(yes_text, (yes_button.x + 10, yes_button.y + 5))
         screen.blit(no_text, (no_button.x + 10, no_button.y + 5))
 
+
         pygame.display.flip()
 
         for event in pygame.event.get():
@@ -118,17 +130,147 @@ def show_retry_popup():
                     return True
                 if no_button.collidepoint(event.pos):
                     return False
+                
+
+
+#Menu fuctionality 
+
+#Main Menu
+#Looks for any key press to start game. 
+def show_main_menu():
+    font = pygame.font.Font(None, 50)
+    text = font.render("Breakout Game", True, BLUE)
+    subtext = font.render("Press any key to continue", True, GREEN)
+
+    while True:
+       
+        screen.fill(BLACK)
+        screen.blit(text, (SCREEN_WIDTH // 2 - text.get_width() // 2, SCREEN_HEIGHT // 3))
+        screen.blit(subtext, (SCREEN_WIDTH // 2 - subtext.get_width() // 2, SCREEN_HEIGHT // 2))
+
+        pygame.display.flip()
+
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                exit()
+            if event.type == KEYDOWN:
+                return  
+
+#Pause Menu
+#Looks for "P" key press to pause. Use any key to resume the game. 
+def pause_menu():
+    font = pygame.font.Font(None, 50)
+    text = font.render("Game Paused", True, RED)
+    subtext = font.render("Press any key to resume", True, WHITE)
+
+    while True:
+        screen.fill(BLACK)
+        screen.blit(text, (SCREEN_WIDTH // 2 - text.get_width() // 2, SCREEN_HEIGHT // 3))
+        screen.blit(subtext, (SCREEN_WIDTH // 2 - subtext.get_width() // 2, SCREEN_HEIGHT // 2))
+
+        pygame.display.flip()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            if event.type == pygame.KEYDOWN:
+                return  
+
+
+#Start timer
+#Creates the delay so players can get ready.
+def menu_timer():
+    font = pygame.font.SysFont('Consolas', 50)
+    counter = 3  # Countdown from 3
+    clock = pygame.time.Clock()
+
+    while counter > 0:
+        screen.fill(WHITE)  # Clear screen
+        text = font.render(str(counter), True, BLACK)
+        text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+        screen.blit(text, text_rect)  # Draw countdown
+        
+        pygame.display.flip()  # Update screen
+        pygame.time.delay(1000)  # Wait 1 second
+        counter -= 1  # Decrease counter
+
+    screen.fill(WHITE)  # Clear the countdown after finishing
+    pygame.display.flip()
+
+
+
+#Scoring Menu
+# Create the screen
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("Breakout Scores")
+
+# Load font
+font = pygame.font.Font(None, 50)
+
+# Hardcoded scores (no file parsing at this time)
+
+def draw_scores():
+    """Renders and displays the scores on the screen."""
+    screen.fill(BLACK)  
+
+    title_text = font.render("Top Scores", True, WHITE)
+    title_rect = title_text.get_rect(center=(SCREEN_WIDTH // 2, 100))
+    subtext = font.render("Press any key to continue", True, GREEN)
+    screen.blit(title_text, title_rect)
+    screen.blit(subtext, (SCREEN_WIDTH // 2 - subtext.get_width() // 2, SCREEN_HEIGHT // 1.4))
+
+    while True:
+
+        # Draw scores
+        for i, (name, score, level) in enumerate(scores):
+            score_text = font.render(f"{i+1}. {name}: {score} (Lvl {level})", True, BLUE)
+            score_rect = score_text.get_rect(center=(SCREEN_WIDTH // 2, 180 + i * 50))
+            screen.blit(score_text, score_rect)
+
+        pygame.display.flip()  
+
+        for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+                    exit()
+                if event.type == KEYDOWN:
+                    return 
+
+
+
+
 
 # Main game loop
 def main():
+    show_main_menu()
+    
+    
     while True:
         paddle = Paddle()
         ball = Ball()
         bricks = create_bricks()
 
+        #menu_timer()
+
         running = True
+        draw_scores()
+        menu_timer()
         while running:
             screen.fill(WHITE)
+            
+
+            # Pause menu event handler
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_p:  # Press 'P' to pause
+                        pause_menu()
+                        
+
 
             # Event handling
             for event in pygame.event.get():
@@ -176,3 +318,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
