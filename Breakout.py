@@ -158,7 +158,8 @@ def show_main_menu():
                 return  
 
 #Pause Menu
-#Looks for "P" key press to pause. Use any key to resume the game. 
+#Looks for "P" key press to pause. Use any key to resume the game.
+#"P" key press code is located in main.
 def pause_menu():
     font = pygame.font.Font(None, 50)
     text = font.render("Game Paused", True, RED)
@@ -183,20 +184,20 @@ def pause_menu():
 #Creates the delay so players can get ready.
 def menu_timer():
     font = pygame.font.SysFont('Consolas', 50)
-    counter = 3  # Countdown from 3
+    counter = 3  
     clock = pygame.time.Clock()
 
     while counter > 0:
-        screen.fill(WHITE)  # Clear screen
+        screen.fill(WHITE)  
         text = font.render(str(counter), True, BLACK)
         text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
-        screen.blit(text, text_rect)  # Draw countdown
+        screen.blit(text, text_rect)  
         
-        pygame.display.flip()  # Update screen
-        pygame.time.delay(1000)  # Wait 1 second
-        counter -= 1  # Decrease counter
+        pygame.display.flip()  
+        pygame.time.delay(1000)  
+        counter -= 1  
 
-    screen.fill(WHITE)  # Clear the countdown after finishing
+    screen.fill(WHITE)  
     pygame.display.flip()
 
 
