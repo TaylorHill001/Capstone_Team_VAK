@@ -1,6 +1,9 @@
 import unittest
 import pygame
-from Breakout import Ball, Paddle, Brick, SCREEN_WIDTH, SCREEN_HEIGHT, PADDLE_WIDTH, PADDLE_HEIGHT
+from ball import Ball
+from paddle import Paddle
+from brick import Brick
+from settings import SCREEN_WIDTH, SCREEN_HEIGHT, PADDLE_HEIGHT, BALL_RADIUS, BRICK_WIDTH, BRICK_HEIGHT
 
 class TestBreakoutGame(unittest.TestCase):
 
@@ -27,14 +30,14 @@ class TestBreakoutGame(unittest.TestCase):
         self.assertGreaterEqual(paddle.rect.x, 0, "Paddle moved out of left boundary!")
 
         # Move right beyond the boundary
-        paddle.rect.x = SCREEN_WIDTH - PADDLE_WIDTH
+        paddle.rect.x = SCREEN_WIDTH - paddle.width
         paddle.move("RIGHT")
-        self.assertLessEqual(paddle.rect.x, SCREEN_WIDTH - PADDLE_WIDTH, "Paddle moved out of right boundary!")
+        self.assertLessEqual(paddle.rect.x, SCREEN_WIDTH - paddle.width, "Paddle moved out of right boundary!")
 
     def test_brick_destruction_on_collision(self):
         """Test that bricks are destroyed when the ball collides with them."""
         ball = Ball(4)
-        brick = Brick(100, 100)  # Create a brick
+        brick = Brick(100, 100, 1)  # Ensure row is provided
         ball.rect.x, ball.rect.y = 100, 100  # Position ball to collide with brick
         bricks = [brick]  # Create a list with one brick
 
