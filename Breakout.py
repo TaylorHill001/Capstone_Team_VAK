@@ -14,7 +14,7 @@ BALL_RADIUS = 10
 BRICK_WIDTH = 75
 BRICK_HEIGHT = 30
 ROWS = 5
-COLS = 10
+COLS = 9
 FPS = 60
 
 # Colors
@@ -44,12 +44,12 @@ class Paddle:
     def draw(self):
         pygame.draw.rect(screen, BLUE, self.rect)
 
-# Ball class
 class Ball:
-    def __init__(self):
+    def __init__(self, speed):
         self.rect = pygame.Rect((SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2), (BALL_RADIUS * 2, BALL_RADIUS * 2))
-        self.dx = random.choice([-4, 4])
-        self.dy = -4
+        self.dx = random.choice([-speed, speed])
+        self.dy = -speed
+        self.speed = speed
 
     def move(self):
         self.rect.x += self.dx
@@ -63,6 +63,7 @@ class Ball:
 
     def draw(self):
         pygame.draw.ellipse(screen, RED, self.rect)
+
 
 # Brick class
 class Brick:
@@ -104,8 +105,11 @@ def show_retry_popup():
         yes_text = font.render("Yes", True, WHITE)
         no_text = font.render("No", True, WHITE)
 
-        screen.blit(yes_text, (yes_button.x + 10, yes_button.y + 5))
-        screen.blit(no_text, (no_button.x + 10, no_button.y + 5))
+        yes_text_rect = yes_text.get_rect(center=yes_button.center)
+        no_text_rect = no_text.get_rect(center=no_button.center)
+
+        screen.blit(yes_text, yes_text_rect)
+        screen.blit(no_text, no_text_rect)
 
         pygame.display.flip()
 
@@ -121,12 +125,16 @@ def show_retry_popup():
 
 # Main game loop
 def main():
-    while True:
+    level = 1
+    ball_speed = 4
+
+    while True:  # Game loop for restarting levels
         paddle = Paddle()
-        ball = Ball()
+        ball = Ball(ball_speed)
         bricks = create_bricks()
 
-        running = True
+        running = True  # Ensure game loop resets for each level
+
         while running:
             screen.fill(WHITE)
 
@@ -146,24 +154,46 @@ def main():
             # Ball movement
             ball.move()
 
-            # Ball collision with paddle
+            # Ball collision with paddle (adjust angle based on impact position)
             if ball.rect.colliderect(paddle.rect):
-                ball.dy *= -1
+                offset = (ball.rect.centerx - paddle.rect.centerx) / (PADDLE_WIDTH / 2)
+                ball.dy = -ball.speed
+                ball.dx = ball.speed * offset  # Adjust angle based on impact position
 
             # Ball collision with bricks
             for brick in bricks[:]:
                 if ball.rect.colliderect(brick.rect):
                     bricks.remove(brick)
-                    ball.dy *= -1
-                    break
 
-            # Ball out of bounds
+                    # Determine collision direction
+                    if abs(ball.rect.bottom - brick.rect.top) < 10 or abs(ball.rect.top - brick.rect.bottom) < 10:
+                        ball.dy *= -1  # Vertical collision
+                    else:
+                        ball.dx *= -1  # Horizontal collision
+                    break  # Only break out of brick collision loop, not the game loop
+
+            # **Check if level is cleared**
+            if not bricks:
+                level += 1
+                ball_speed += 1  # Increase ball speed for the next level
+
+                # **Display "Next Level" message before resetting**
+                font = pygame.font.Font(None, 74)
+                next_level_text = font.render(f"Level {level}", True, GREEN)
+                screen.fill(WHITE)
+                screen.blit(next_level_text, (SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2))
+                pygame.display.flip()
+                pygame.time.delay(2000)  # Pause for 2 seconds before restarting
+
+                break  # Exit inner loop to restart the level
+
+            # **Ball out of bounds (Game Over)**
             if ball.rect.bottom >= SCREEN_HEIGHT:
                 if not show_retry_popup():
                     pygame.quit()
                     exit()
                 else:
-                    break
+                    break  # Restart the level if retry
 
             # Draw everything
             paddle.draw()
@@ -171,8 +201,15 @@ def main():
             for brick in bricks:
                 brick.draw()
 
+            # **Display Level**
+            font = pygame.font.Font(None, 50)
+            level_text = font.render(f"Level: {level}", True, BLACK)
+            screen.blit(level_text, (10, 10))
+
             pygame.display.flip()
             clock.tick(FPS)
+
+
 
 if __name__ == "__main__":
     main()
