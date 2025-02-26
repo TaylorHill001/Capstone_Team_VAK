@@ -181,15 +181,8 @@ def main():
             score_text = font.render(f"Score: {scores.current_score}", True, TEXT_COLOR)
             screen.blit(score_text, (20, 15))
 
-            # **Display Level**
-            font = pygame.font.Font(None, 50)
-            level_text = font.render(f"Level: {level}", True, BLACK)
-            screen.blit(level_text, (10, 10))
-
             pygame.display.flip()
             clock.tick(FPS)
-
-
 
 if __name__ == "__main__":
     main()
