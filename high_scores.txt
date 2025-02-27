@@ -1,1 +1,1 @@
-Close 97 1,TestScore3 48 1,Score2 10 1,TestScore 2 1,TestScore4 2 1,
+okay 6 2,n 5 1,yes 3 1,no 1 1,N/A 0 0,

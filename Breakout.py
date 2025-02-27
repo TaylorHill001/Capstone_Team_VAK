@@ -101,16 +101,16 @@ def main():
     #Main menu only appears at start of the game. 
     # Will not show again after level pass or restart. 
     show_main_menu() 
+    draw_scores() #Scores show up before each game begins
+    scores = Scores()
     level = 1
     ball_speed = 4
 
     while True:
-        draw_scores() #Scores show up before each game begins
         menu_timer() #Count down timer gives players time to prepare to play. 
         paddle = Paddle()
         ball = Ball(ball_speed)
         bricks = create_bricks()
-        scores = Scores()
 
         while running:
             screen.fill(BACKGROUND_COLOR)
@@ -169,10 +169,10 @@ def main():
             # **Ball out of bounds (Game Over)**
             if ball.rect.bottom >= SCREEN_HEIGHT:
                 if scores.compare_current_score() is not None:
-                    # TODO add user input check
                     player_name = show_name_popup()
                     scores.update_high_scores(player_name, level)
                 scores.reset_score()
+                draw_scores() #Scores show up before each game begins
                 if not show_retry_popup():
                     pygame.quit()
                     exit()

@@ -94,7 +94,7 @@ def draw_scores():
     #This is score parsing from the .txt file functionality. 
     high_scores = []
     try:
-        with open("high_scores.txt", "r") as file:
+        with open(HIGH_SCORES_FILE, "r") as file:
             data = file.read().strip()
             users = data.split(",")
 
@@ -104,7 +104,7 @@ def draw_scores():
                     name, score, level = parts
                     high_scores.append((name.strip(), score.strip(), level.strip()))
     except FileNotFoundError:
-        print("Error: high_scores.txt not found!")
+        print(f"Error: {HIGH_SCORES_FILE} not found!")
 
 
     while True:
